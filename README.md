@@ -1,5 +1,5 @@
 # WeST-twitter-crawler
-A simple Twitter crawler powered by Logstash.
+A simple Twitter crawler powered by Logstash. Requires docker and docker-compose
 
 # Usage
 1. Create '.env' based on '.env.example' with your own Twitter app keys.
