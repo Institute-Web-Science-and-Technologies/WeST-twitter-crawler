@@ -1,0 +1,16 @@
+version: '3.2'
+
+services:
+  logstash:
+    build: .
+    env_file:
+      .env
+    networks:
+      - WeST-crawler
+    volumes:
+      - type: bind
+        source: ./output
+        target: /usr/share/logstash/output
+
+networks:
+  WeST-crawler:
