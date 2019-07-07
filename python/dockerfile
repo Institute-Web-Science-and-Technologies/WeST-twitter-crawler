@@ -1,0 +1,5 @@
+FROM python:3.6.8-alpine
+RUN pip3 install web.py==0.40.dev0
+COPY interface.py interface.py
+COPY templates/ templates/
+CMD python3 interface.py

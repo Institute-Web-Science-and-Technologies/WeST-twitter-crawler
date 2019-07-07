@@ -1,0 +1,21 @@
+$def with (kwl)
+<!DOCTYPE HTML>
+<head>
+	<title>Twitter Crawler</title>
+</head>
+<html>
+<body>
+	Separate each individual keyword with space.
+	Please enter keywords here:
+	<form action="/" method="POST">
+		Keywords: <input type="text" name="keywords" /><br/>
+		<button type="submit">Submit</button>
+	</form>
+	$if kwl:
+		Current Keywords: <br>
+		$for w in kwl:
+			$w <br>
+	$else:
+		No keywords set.
+</body>
+</html>

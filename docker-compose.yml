@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   logstash:
-    build: .
+    build: ./logstash
     env_file:
       .env
     networks:
@@ -11,6 +11,19 @@ services:
       - type: bind
         source: ./output
         target: /usr/share/logstash/output
+      - type: bind
+        source: ./logstash/pipeline
+        target: /usr/share/logstash/pipeline/
+    command: bin/logstash --config.reload.automatic
+
+  web:
+    build: ./python
+    ports:
+      - "8080:8080"
+    volumes:
+      - type: bind
+        source: ./logstash/pipeline
+        target: /pipeline
 
 networks:
   WeST-crawler:
