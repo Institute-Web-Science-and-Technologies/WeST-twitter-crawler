@@ -9,7 +9,7 @@ class index:
     def read_existing(self):
         if self.initialized == False:
             #open pipeline file, find position of keyword field
-            fo = open("twitter_pipeline.conf", "r+")
+            fo = open("pipeline/twitter_pipeline.conf", "r+")
             f = fo.read()
             pos = f.find("keywords => ")
             fo.seek(pos + 13)
@@ -35,7 +35,7 @@ class index:
     def log_io(self, kw):
         st_len = len(self.keyword_list) #current number of keywords
         #open pipeline config, find position of keyword field
-        fo = open("twitter_pipeline.conf", "r+")
+        fo = open("pipeline/twitter_pipeline.conf", "r+")
         f = fo.read()
         pos = f.find("keywords => ")
         fo.seek(pos + 13)
