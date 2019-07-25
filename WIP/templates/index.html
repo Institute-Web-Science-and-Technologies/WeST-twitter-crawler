@@ -1,0 +1,37 @@
+$def with (kwl)
+<!DOCTYPE HTML>
+<head>
+	<title>Twitter Crawler</title>
+</head>
+<html>
+<body>
+	Separate each individual keyword with space.
+	Please enter keywords here:
+	<form action="/" method="POST">
+		Keywords: <input type="text" name="keywords" /><br/>
+		<button type="submit">Submit</button>
+	</form>
+	$if res:
+		$if res.get('response') == 'Added':
+		    Added Keywords: <br>
+		    $for w in res.get('keywords'):
+		    $w <br>
+		$elif res.get('response') == 'Deleted':
+			Deleted Keywords: <br>
+		    $for w in res.get('keywords'):
+			$w <br>
+		$elif res.get('response') == 'Exists':
+			The Following Keywords Are Already Being Crawled: <br>
+		    $for w in res.get('keywords'):
+			$w <br>
+		$elif res.get('response') == 'Current':
+			$if len(res.get('keywords')) > 0:
+				Current List of Keywords: <br>
+			    $for w in res.get('keywords'):
+				$w <br>
+			$else:
+				Current List is Empty
+	$else:
+		No response.
+</body>
+</html>
