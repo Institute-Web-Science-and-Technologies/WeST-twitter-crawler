@@ -1,4 +1,5 @@
 import json
+import uuid
 from kafka import KafkaProducer
 from kafka import KafkaConsumer
 import web
@@ -8,7 +9,7 @@ urls = ('/','index')
 render = web.template.render('templates/')
 
 class index:
-    keyword_list = []
+    message_list = []
     initialized = False
     producer = KafkaProducer(bootstrap_servers=['kafka:9092'], 
                 value_serializer=lambda x: json.dumps(x).encode('utf-8'))
@@ -21,24 +22,37 @@ class index:
                 value_deserializer=lambda x: json.loads(x.decode('utf-8'))
                 )
     def send_command(self, comm, kw):
-        pack = {'command':comm, 'keywords':kw}
+        uid = int(uuid.uuid4())
+        pack = {'id':uid, 'command':comm, 'keywords':kw}
         self.producer.send('twitter-crawler-command', value=pack)
-        return
-    def listen(self):
+        return uid
+    def listen(self, uid):
+        for old_message in self.message_list:
+            if (old_message.get('id') == uid):
+                return old_message
         message = self.consumer.next()
-        return message
+        if (message.get('id') == uid):
+            return message
+        else:
+            self.message_list.append(message)
+        
+        res = {'response':'non'} 
+        return res
     def GET(self):
         if self.initialized == False:
-            self.send_command('cur',[])
-        res = self.listen()
+            uid = self.send_command('cur',[])
+        res = self.listen(uid)
         return render.index(res)
     
     def POST(self):
-        form = web.input(keywords='')
-        kws = form.keywords
+        form_c = web.input(command='add')
+        form_kw = web.input(keywords='')
+        
+        com = form_c.command
+        kws = form_kw.keywords
         kw = kws.split()
-        self.send_command('add',kw)
-        res = self.listen()
+        uid = self.send_command(com,kw)
+        res = self.listen(uid)
         return render.index(res)
     
 if __name__ == "__main__":

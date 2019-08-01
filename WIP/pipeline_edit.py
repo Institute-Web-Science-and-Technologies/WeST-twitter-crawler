@@ -8,7 +8,7 @@ class pipeline:
     def read_existing(self):#checks conf file for existing keywords
         if self.initialized == False:
             #open pipeline file, find position of keyword field
-            fo = open("twitter_pipeline.conf", "r+")
+            fo = open("pipeline/twitter_pipeline.conf", "r+")
             f = fo.read()
             pos = f.find("keywords => ")
             fo.seek(pos + 13)
@@ -31,11 +31,11 @@ class pipeline:
                     curr_keyword = curr_keyword + char
             self.initialized = True
         return 
-    def add_keyword(self, kw):#add new keyword to conf file
+    def add_keyword(self, uid, kw):#add new keyword to conf file
         st_len = len(self.keyword_list) #current number of keywords
-        res = {'response':'Added', 'keywords':[]}
+        res = {'id':uid, 'response':'Added', 'keywords':[]}
         #open pipeline config, find position of keyword field
-        fo = open("twitter_pipeline.conf", "r+")
+        fo = open("pipeline/twitter_pipeline.conf", "r+")
         f = fo.read()
         pos = f.find("keywords => ")
         fo.seek(pos + 13)
@@ -57,10 +57,10 @@ class pipeline:
         fo.write(rest)
         fo.close()
         return res
-    def delete_keyword(self, kw):#delete keyword from conf file
-        res = {'response':'Deleted', 'keywords':[]}
+    def delete_keyword(self, uid, kw):#delete keyword from conf file
+        res = {'id':uid, 'response':'Deleted', 'keywords':[]}
         #open pipeline config, find position of keyword field
-        fo = open("twitter_pipeline.conf", "r+")
+        fo = open("pipeline/twitter_pipeline.conf", "r+")
         f = fo.read()
         pos = f.find("keywords => ")
         fo.seek(pos + 13)
@@ -93,14 +93,14 @@ class pipeline:
             return True
         else:
             return False
-    def check_keyword(self, kw):#check a list of keywords
-        res = {'response':'Exists', 'keywords':[]}
+    def check_keyword(self, uid, kw):#check a list of keywords
+        res = {'id':uid, 'response':'Exists', 'keywords':[]}
         for word in kw:
             if self.check_kw(word) == True:
                 res.get('keywords').append(word)
         return res
-    def get_current(self):#return current list of keywords
-        res = {'response':'Current', 'keywords':[]}
+    def get_current(self, uid):#return current list of keywords
+        res = {'id':uid, 'response':'Current', 'keywords':[]}
         res.get('keywords') = self.keyword_list
         return res
     
@@ -123,14 +123,15 @@ if __name__ == "__main__":
     #read message and response
     for message in consumer:
         content = message.value
+        uid = content.get('id')
         command = content.get('command')
         kw = content.get('keywords')
         if command == 'add':
-            response = pl.add_keyword(kw)
+            response = pl.add_keyword(uid,kw)
         elif command == 'del':
-            response = pl.delete_keyword(kw)
+            response = pl.delete_keyword(uid,kw)
         elif command == 'chk':
-            response = pl.check_keyword(kw)
+            response = pl.check_keyword(uid,kw)
         elif command == 'cur':
-            response = pl.get_current()
+            response = pl.get_current(id)
         producer.send('twitter-crawler-response', value=response)

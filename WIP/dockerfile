@@ -1,0 +1,8 @@
+FROM python:3.6.8-alpine
+RUN pip3 install web.py==0.40.dev0
+RUN pip3 install kafka-python
+COPY interface.py interface.py
+COPY pipeline_edit.py pipeline_edit.py
+COPY templates/ templates/
+CMD python3 interface.py 8080
+CMD python3 pipeline_edit.py

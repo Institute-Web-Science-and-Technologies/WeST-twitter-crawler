@@ -5,9 +5,17 @@ $def with (kwl)
 </head>
 <html>
 <body>
-	Separate each individual keyword with space.
-	Please enter keywords here:
 	<form action="/" method="POST">
+	Action:
+	<select name="command">
+		<option value="add">Add keywords</option>
+		<option value="del">Delete keywords</option>
+		<option value="chk">Check keywords</option>
+		<option value="cur">Get current list</option>
+	</select>
+	<br>
+	Separate each individual keyword with space.<br>
+	Please enter keywords here:<br>
 		Keywords: <input type="text" name="keywords" /><br/>
 		<button type="submit">Submit</button>
 	</form>
