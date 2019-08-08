@@ -8,7 +8,7 @@ class pipeline:
     def read_existing(self):#checks conf file for existing keywords
         if self.initialized == False:
             #open pipeline file, find position of keyword field
-            fo = open("pipeline/twitter_pipeline.conf", "r+")
+            fo = open("twitter_pipeline.conf", "r+")
             f = fo.read()
             pos = f.find("keywords => ")
             fo.seek(pos + 13)
@@ -35,7 +35,7 @@ class pipeline:
         st_len = len(self.keyword_list) #current number of keywords
         res = {'id':uid, 'response':'Added', 'keywords':[]}
         #open pipeline config, find position of keyword field
-        fo = open("pipeline/twitter_pipeline.conf", "r+")
+        fo = open("twitter_pipeline.conf", "r+")
         f = fo.read()
         pos = f.find("keywords => ")
         fo.seek(pos + 13)
@@ -60,7 +60,7 @@ class pipeline:
     def delete_keyword(self, uid, kw):#delete keyword from conf file
         res = {'id':uid, 'response':'Deleted', 'keywords':[]}
         #open pipeline config, find position of keyword field
-        fo = open("pipeline/twitter_pipeline.conf", "r+")
+        fo = open("twitter_pipeline.conf", "r+")
         f = fo.read()
         pos = f.find("keywords => ")
         fo.seek(pos + 13)
@@ -100,8 +100,8 @@ class pipeline:
                 res.get('keywords').append(word)
         return res
     def get_current(self, uid):#return current list of keywords
-        res = {'id':uid, 'response':'Current', 'keywords':[]}
-        res.get('keywords') = self.keyword_list
+        kw = self.keyword_list
+        res = {'id':uid, 'response':'Current', 'keywords':kw}
         return res
     
 if __name__ == "__main__":
@@ -115,11 +115,13 @@ if __name__ == "__main__":
         auto_offset_reset='latest',
         enable_auto_commit=True,
         group_id='twitter-crawler',
-        value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+        value_deserializer=lambda x: json.loads(x.decode('utf-8')),
+        api_version=(0,11,5)
         )
     #Create Kafka producer
     producer = KafkaProducer(bootstrap_servers=['kafka:9092'], 
-                             value_serializer=lambda x: json.dumps(x).encode('utf-8'))
+                             value_serializer=lambda x: json.dumps(x).encode('utf-8'),
+                             api_version=(0,11,5))
     #read message and response
     for message in consumer:
         content = message.value

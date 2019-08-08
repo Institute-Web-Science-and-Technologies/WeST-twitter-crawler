@@ -12,14 +12,16 @@ class index:
     message_list = []
     initialized = False
     producer = KafkaProducer(bootstrap_servers=['kafka:9092'], 
-                value_serializer=lambda x: json.dumps(x).encode('utf-8'))
+                value_serializer=lambda x: json.dumps(x).encode('utf-8'),
+                api_version=(0,11,5))
     consumer = KafkaConsumer(
                 'twitter-crawler-response',
                 bootstrap_servers=['kafka:9092'],
                 auto_offset_reset='latest',
                 enable_auto_commit=True,
                 group_id='twitter-crawler',
-                value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+                value_deserializer=lambda x: json.loads(x.decode('utf-8')),
+                api_version=(0,11,5)
                 )
     def send_command(self, comm, kw):
         uid = int(uuid.uuid4())
