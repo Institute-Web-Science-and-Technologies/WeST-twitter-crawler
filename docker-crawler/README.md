@@ -1,7 +1,8 @@
 # Usage
 1. Create '.env' with your own Twitter app keys.
 2. Edit pipelines.yml to control which city keyword sets are crawled.
-3. Run ```
+3. Run 
+```
 docker build -t docker-crawler .
 ```
 4. Run 
