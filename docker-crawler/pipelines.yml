@@ -1,0 +1,8 @@
+- pipeline.id: twitter_Antalya
+  path.config: "/usr/share/logstash/pipeline/twitter_Antalya.conf"
+- pipeline.id: twitter_Antwerpen
+  path.config: "/usr/share/logstash/pipeline/twitter_Antwerpen.conf"
+- pipeline.id: twitter_Cork
+  path.config: "/usr/share/logstash/pipeline/twitter_Cork.conf"
+- pipeline.id: twitter_Thessaloniki
+  path.config: "/usr/share/logstash/pipeline/twitter_Thessaloniki.conf"
