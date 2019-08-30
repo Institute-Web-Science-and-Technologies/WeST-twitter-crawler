@@ -1,3 +1,4 @@
 FROM docker.elastic.co/logstash/logstash:7.1.1
 RUN mkdir /usr/share/logstash/output
 COPY ./pipelines.yml /usr/share/logstash/config
+CMD bin/logstash --config.reload.automatic
